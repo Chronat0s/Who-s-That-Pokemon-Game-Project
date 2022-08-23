@@ -1,7 +1,19 @@
 // Variables
 
 let pokemonEl = document.querySelector(".pokemon_el");
-let guessEl = document.querySelector("guess_el")
+let guessEl = document.querySelector(".guess_el");
+let generationEl = document.getElementById("generation_el");
+let stageEl = document.getElementById("stage_el");
+let dualtypeEl = document.getElementById("dual-type_el");
+let type1El = document.getElementById("type-1_el");
+let type2El = document.getElementById("type-2_el");
+let legendaryEl = document.getElementById("legendary_el");
+let weightEl = document.getElementById("weight_el");
+
+pokemonEl.innerHTML = `<div class = "pokemon__image--wrapper">
+<img  class = "question-mark__image" src="https://upload.wikimedia.org/wikipedia/commons/5/55/Question_Mark.svg" alt="">
+</div>`
+
 
 // Answer 
 let isAnswerBaseStage = false;
@@ -14,6 +26,7 @@ let answerSecondType = null;
 let answerId = null;
 let answerGeneration = null;
 let answerWeight = null;
+let answerStage = null;
 
 
 // Guess
@@ -27,6 +40,7 @@ let guessSecondType = null;
 let guessId = null;
 let guessGeneration = null;
 let guessWeight = null;
+let guessStage = null;
 
 
 // Arrays
@@ -70,9 +84,9 @@ const baseStage = [
     "amaura", "hawlucha", "dedenne", "carbink", "goomy", "klefki", "phantump", "pumpkaboo", "bergmite", "noibat",
     "xerneas", "yveltal", "zygarde", "diancie", "hoopa", "volcanion", "rowlet", "litten", "popplio", "pikipek",
     "yungoos", "grubbin", "crabrawler", "oricorio", "cutiefly", "rockruff", "wishiwashi", "mareanie", "mudbray", "dewpider",
-    "fomantus", "morelull", "salandit", "stufful", "bounsweet", "comfey", "oranguru", "passimian", "wimpod", "sandygast",
-    "pyukumuku", "type: null", "minior", "komala", "turtonator", "togedemaru", "mimikyu", "bruxish", "drampa", "dhelmise",
-    "jangmo'o", "tapu koko", "tapu lele", "tapu bulu", "tapu fini", "cosmog", "nihilego", "buzzwole", "pheremosa", "xurkitree",
+    "fomantis", "morelull", "salandit", "stufful", "bounsweet", "comfey", "oranguru", "passimian", "wimpod", "sandygast",
+    "pyukumuku", "type-null", "minior", "komala", "turtonator", "togedemaru", "mimikyu", "bruxish", "drampa", "dhelmise",
+    "jangmo'o", "tapu-koko", "tapu-lele", "tapu-bulu", "tapu-fini", "cosmog", "nihilego", "buzzwole", "pheremosa", "xurkitree",
     "celesteela", "kartana", "guzzlord", "necrozma", "magearna", "marshadow", "poipole", "stakataka", "blacephalon", "zeraora",
     "meltan", "grookey", "scorbunny", "sobble", "skwovet", "rookidee", "blipbug", "nickit", "gossifleur", "wooloo",
     "chewtle", "yamper", "rolycoly", "applin", "silicobra", "cramorant", "arrokuda", "toxel", "sizzlipede", "clobbopus",
@@ -134,7 +148,7 @@ const secondStage = [
 const legendaryOrMythical = [
     "articuno", "zapdos", "moltres", "raikou", "entei", "suicune", "regirock", "regice", "registeel", "latias",
     "latios", "uxie", "mesprit", "azelf", "heatran", "regigigas", "cresselia", "cobalion", "terrakion", "virizion", 
-    "tornadus", "thundurus", "landorus", "type: null", "silvally", "tapu koko", "tapu lele", "tapu bulu", "tapu fini", "nihilego",
+    "tornadus", "thundurus", "landorus", "type-null", "silvally", "tapu-koko", "tapu-lele", "tapu-bulu", "tapu-fini", "nihilego",
     "buzzwole", "pheremosa", "xurkitree", "celesteela", "kartana", "guzzlord", "poipole", "naganadel", "stakataka", "blacephalon",
     "kubfu", "urshifu", "regieleki", "regidrago", "glastrier", "spectrier", "enamorus", "mewtwo", "lugia", "ho-oh", 
     "kyogre", "groudon", "rayquaza", "dialga", "palkia", "giratina", "reshiram", "zekrom", "kyurem", "xerneas", 
@@ -162,18 +176,41 @@ async function startGame(){
     answerGeneration = checkGeneration(answerId);
     answerHasSecondType = checkHasSecondType(answerSecondType);
     answerWeight = checkWeight(answerData)
-    
+    answerStage = checkAnswerStage()
+    console.log("answer");
     console.log(answerName, isAnswerBaseStage, isAnswerFirstStage, isAnswerSecondStage, isAnswerLegendaryOrMythical, answerFirstType, answerSecondType, "Gen: " + answerGeneration, answerWeight + "kg");
-
 }
 
+function checkAnswerStage(pokemon){
+    if (isAnswerBaseStage){
+        return "Base"
+    }
+    else if (isAnswerFirstStage){
+        return "First"
+    }
+    else {
+        return "Second"
+    }
+}
+
+function checkGuessStage(pokemon){
+    if (isGuessBaseStage){
+        return "Base"
+    }
+    else if (isGuessFirstStage){
+        return "First"
+    }
+    else{
+        return "Second"
+    }
+}
 
 // Records your Guess
 async function guess(event){
     let guess = await fetch(`http://pokeapi.co/api/v2/pokemon/${(event.target.value).toLowerCase()}/`);
     let guessData = await guess.json();
-    let guessId = guessData.id
-    let guessName = guessData.species.name
+    let guessId = guessData.id;
+    let guessName = guessData.species.name;
     isGuessBaseStage = checkBaseStage(guessName);
     isGuessFirstStage = checkFirstStage(guessName);
     isGuessSecondStage = checkSecondStage(guessName);
@@ -183,15 +220,53 @@ async function guess(event){
     guessGeneration = checkGeneration(guessId);
     guessHasSecondType = checkHasSecondType(guessSecondType);
     guessWeight = checkWeight(guessData)
+    guessStage = checkGuessStage()
     pokemonEl.innerHTML = `
-    <img  src="${guessData.sprites.front_default}" alt="">`
+    <div class = "pokemon__image--wrapper">
+    <img  class = "pokemon__image" src="${guessData.sprites.front_default}" alt="">
+    </div>`
+    guessEl.innerHTML = `
+    <input type="text" onchange="guess(event)">
+            <ul class = "hints">
+                <li class = "hint_wrapper">
+                    <h2 class = "hint__heading">Gen</h2>
+                    <div class = "hint__response">${guessGeneration}</div>
+                </li>
+                <li class = "hint_wrapper">
+                    <h2 class = "hint__heading">Stage</h2>
+                    <div class = "hint__response">${guessStage}</div>
+                </li>
+                <li class = "hint_wrapper">
+                    <h2 class = "hint__heading">Dual Type</h2>
+                    <div class = "hint__response">${guessHasSecondType}</div>
+                </li>
+                <li class = "hint_wrapper">
+                    <h2 class = "hint__heading">Type 1</h2>
+                    <div class = "hint__response">${guessFirstType}</div>
+                </li>
+                <li class = "hint_wrapper">
+                    <h2 class = "hint__heading">Type 2</h2>
+                    <div class = "hint__response">${guessSecondType}</div>
+                </li>
+                <li class = "hint_wrapper">
+                    <h2 class = "hint__heading">Legendary/Mythical</h2>
+                    <div class = "hint__response">${isGuessLegendaryOrMythical}</div>
+                </li>
+                <li class = "hint_wrapper">
+                    <h2 class = "hint__heading">Weight</h2>
+                    <div class = "hint__response">${guessWeight + "kg"}</div>
+                </li>
+            </ul>
+    `
     console.log("guess")
     console.log(guessName, isGuessBaseStage, isGuessFirstStage, isGuessSecondStage, isGuessLegendaryOrMythical, guessFirstType, guessSecondType, "Gen: " + guessGeneration, guessWeight + "kg");
-    compareGuessToAnswer()
+    compareGuessToAnswer();
 }
 
 function compareGuessToAnswer(){
-    
+    if(answerGeneration == guessGeneration){
+
+    }
 }
 
 /* Game Initialisation
@@ -200,6 +275,10 @@ function compareGuessToAnswer(){
 */
 function newGame(){
     answerId = Math.floor(Math.random()*906)
+    pokemonEl.innerHTML = `<div class = "pokemon__image--wrapper">
+    <img  class = "question-mark__image" src="https://upload.wikimedia.org/wikipedia/commons/5/55/Question_Mark.svg" alt="">
+    </div>
+    <p>Guess!!!</p>`
     startGame()
 }
 /*
@@ -242,20 +321,25 @@ function newGame(){
 
 // TYPING
 function checkFirstType(pokemonData){
-    return pokemonData.types[0].type.name;
+    return pokemonData.types[0].type.name.charAt(0).toUpperCase() + pokemonData.types[0].type.name.slice(1);
 }
 
 function checkSecondType(pokemonData){
     if (pokemonData?.types[1]){
-        return pokemonData.types[1].type.name;
+        return pokemonData.types[1].type.name.charAt(0).toUpperCase() + pokemonData.types[1].type.name.slice(1);
     }
     else {
-        return "none"
+        return "None"
     }
 }
 
 function checkHasSecondType(secondType){
-    return (secondType != "none")
+    if(secondType != "None"){
+        return "Yes"
+    }
+    else{
+        return "No"
+    }
 }
 
 // WEIGHT
@@ -296,11 +380,11 @@ function checkSecondStage(a){
 function checkLegendaryOrMythical(a){
     for (let i = 0; i < legendaryOrMythical.length; i++){
         if (a == legendaryOrMythical[i]){
-            return true;
+            return "Yes";
         }
         
     }
-    return false
+    return "No"
 }
 
 /*

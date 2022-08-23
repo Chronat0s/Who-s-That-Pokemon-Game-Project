@@ -9,6 +9,12 @@
     background-color: #242424;
 }
 
+p{
+    color: white;
+    font-size: 32px;
+    font-weight: bold;
+}
+
 button{
     display: flex;
     justify-content: center;
@@ -37,6 +43,28 @@ input{
 .title{
     color: white;
 }
+
+.pokemon__image--wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    height: 240px;
+    width: 240px;
+    background-color: white;
+    border-radius: 60px;
+    margin-bottom: 40px;
+}
+
+
+.pokemon__image{
+    width: 80%;
+}
+
+.question-mark__image{
+    width: 100%;
+}
+
 .hints{
     display: flex;
     justify-content: space-around;
@@ -51,13 +79,18 @@ input{
     justify-content: center;
     
 }
-
+.hint__heading{
+    color: white;
+}
 .hint__response{
     display: flex;
     justify-content: center;
+    align-items: center;
     text-align: center;
-    width: 40px;
-    height: 40px;
+    font-size: 16px;
+    font-weight: bold;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     background-color: white;
     margin: 0 auto;
