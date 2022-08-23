@@ -162,9 +162,7 @@ async function startGame(){
     answerGeneration = checkGeneration(answerId);
     answerHasSecondType = checkHasSecondType(answerSecondType);
     answerWeight = checkWeight(answerData)
-    pokemonEl.innerHTML = `
-    <img  src="${answerData.sprites.front_default}" alt="">`
-    console.log("Answer")
+    
     console.log(answerName, isAnswerBaseStage, isAnswerFirstStage, isAnswerSecondStage, isAnswerLegendaryOrMythical, answerFirstType, answerSecondType, "Gen: " + answerGeneration, answerWeight + "kg");
 
 }
@@ -185,6 +183,8 @@ async function guess(event){
     guessGeneration = checkGeneration(guessId);
     guessHasSecondType = checkHasSecondType(guessSecondType);
     guessWeight = checkWeight(guessData)
+    pokemonEl.innerHTML = `
+    <img  src="${guessData.sprites.front_default}" alt="">`
     console.log("guess")
     console.log(guessName, isGuessBaseStage, isGuessFirstStage, isGuessSecondStage, isGuessLegendaryOrMythical, guessFirstType, guessSecondType, "Gen: " + guessGeneration, guessWeight + "kg");
     compareGuessToAnswer()

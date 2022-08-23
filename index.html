@@ -8,15 +8,45 @@
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <h1 class="title">WHO'S THAT POKEMON?!</h1>
+    <div class="row">
+    <h1 class="title">WH<img class = "pokeball" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Pok%C3%A9_Ball_icon.svg">'S 
+        THAT 
+        P<img class = "pokeball" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Pok%C3%A9_Ball_icon.svg">KEM<img class = "pokeball" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Pok%C3%A9_Ball_icon.svg">N?!</h1>
     <div class="pokemon_el">
         
     </div>
     <button onclick="newGame()">
         New Game
     </button>
-    <div class="guess_el">
-        <input type="text" onchange="guess(event)">
+        <div class="guess_el">
+            <input type="text" onchange="guess(event)">
+            <ul class = "hints">
+                <li class = "hint_wrapper">
+                    <h2 class = "hint__heading">Gen</h2>
+                    <div class = "hint__response">.</div>
+                </li>
+                <li class = "hint_wrapper">
+                    <h2 class = "hint__heading">Dual Type</h2>
+                    <div class = "hint__response">.</div>
+                </li>
+                <li class = "hint_wrapper">
+                    <h2 class = "hint__heading">Type 1</h2>
+                    <div class = "hint__response">.</div>
+                </li>
+                <li class = "hint_wrapper">
+                    <h2 class = "hint__heading">Type 2</h2>
+                    <div class = "hint__response">.</div>
+                </li>
+                <li class = "hint_wrapper">
+                    <h2 class = "hint__heading">Legendary/Mythical</h2>
+                    <div class = "hint__response">.</div>
+                </li>
+                <li class = "hint_wrapper">
+                    <h2 class = "hint__heading">Weight</h2>
+                    <div class = "hint__response">.</div>
+                </li>
+            </ul>
+        </div>
     </div>
     <script src = "index.js"></script>
 </body>
