@@ -1,26 +1,36 @@
 // Variables
-// Answer 
 
 let pokemonEl = document.querySelector(".pokemon_el");
-let isBaseStage = false;
-let isFirstStage = false;
-let isSecondStage = false;
-let isLegendaryOrMythical = false; 
-let firstType = null;
-let hasSecondType = null;
-let secondType = null;
-let pokemonNumber = null;
-let generation = null;
-let weight = null;
+let guessEl = document.querySelector("guess_el")
 
-function guessPokemon(event){
-    console.log(event.target.value)
-}
+// Answer 
+let isAnswerBaseStage = false;
+let isAnswerFirstStage = false;
+let isAnswerSecondStage = false;
+let isAnswerLegendaryOrMythical = false; 
+let answerFirstType = null;
+let answerHasSecondType = null;
+let answerSecondType = null;
+let answerId = null;
+let answerGeneration = null;
+let answerWeight = null;
+
+
+// Guess
+let isGuessBaseStage = false;
+let isGuessFirstStage = false;
+let isGuessSecondStage = false;
+let isGuessLegendaryOrMythical = false; 
+let guessFirstType = null;
+let guessHasSecondType = null;
+let guessSecondType = null;
+let guessId = null;
+let guessGeneration = null;
+let guessWeight = null;
+
+
 // Arrays
-/*
-* Is First, Second or Third Stage evolution.
-* Create an array for all 3 stages which can be looped through.
-*/
+
 const baseStage = [
     "bulbasaur", "charmander", "squirtle", "caterpie", "weedle", "pidgey", "rattata", "spearow", "ekans", "pichu", 
     "sandshrew", "nidoran♀", "nidoran♂", "cleffa", "vulpix", "igglybuff", "zubat", "oddish", "paras", "venonat", 
@@ -137,25 +147,127 @@ const legendaryOrMythical = [
 
 
 // Functions
+
+// Randomly selects a Pokemon from the API as your Answer
 async function startGame(){
-    const pokemon = await fetch(`http://pokeapi.co/api/v2/pokemon/${pokemonNumber}/`);
-    const pokemonData = await pokemon.json();
-    let id = pokemonData.id
-    let name = pokemonData.species.name
-    isBaseStage = checkBaseStage(name);
-    isFirstStage = checkFirstStage(name);
-    isSecondStage = checkSecondStage(name);
-    isLegendaryOrMythical = checkLegendaryOrMythical(name);
-    firstType = pokemonData.types[0].type.name
-    checkGeneration(id);
-    checkTyping(pokemonData);
-    checkWeight(pokemonData);
+    let answer = await fetch(`http://pokeapi.co/api/v2/pokemon/${answerId}/`);
+    let answerData = await answer.json();
+    let answerName = answerData.species.name
+    isAnswerBaseStage = checkBaseStage(answerName);
+    isAnswerFirstStage = checkFirstStage(answerName);
+    isAnswerSecondStage = checkSecondStage(answerName);
+    isAnswerLegendaryOrMythical = checkLegendaryOrMythical(answerName);
+    answerFirstType = checkFirstType(answerData);
+    answerSecondType = checkSecondType(answerData);
+    answerGeneration = checkGeneration(answerId);
+    answerHasSecondType = checkHasSecondType(answerSecondType);
+    answerWeight = checkWeight(answerData)
     pokemonEl.innerHTML = `
-    <img  src="${pokemonData.sprites.front_default}" alt="">`
-    console.log(isBaseStage, isFirstStage, isSecondStage, isLegendaryOrMythical, firstType, secondType, generation, weight);
-    console.log(weight)
+    <img  src="${answerData.sprites.front_default}" alt="">`
+    console.log("Answer")
+    console.log(answerName, isAnswerBaseStage, isAnswerFirstStage, isAnswerSecondStage, isAnswerLegendaryOrMythical, answerFirstType, answerSecondType, "Gen: " + answerGeneration, answerWeight + "kg");
+
 }
 
+
+// Records your Guess
+async function guess(event){
+    let guess = await fetch(`http://pokeapi.co/api/v2/pokemon/${(event.target.value).toLowerCase()}/`);
+    let guessData = await guess.json();
+    let guessId = guessData.id
+    let guessName = guessData.species.name
+    isGuessBaseStage = checkBaseStage(guessName);
+    isGuessFirstStage = checkFirstStage(guessName);
+    isGuessSecondStage = checkSecondStage(guessName);
+    isGuessLegendaryOrMythical = checkLegendaryOrMythical(guessName);
+    guessFirstType = checkFirstType(guessData);
+    guessSecondType = checkSecondType(guessData);
+    guessGeneration = checkGeneration(guessId);
+    guessHasSecondType = checkHasSecondType(guessSecondType);
+    guessWeight = checkWeight(guessData)
+    console.log("guess")
+    console.log(guessName, isGuessBaseStage, isGuessFirstStage, isGuessSecondStage, isGuessLegendaryOrMythical, guessFirstType, guessSecondType, "Gen: " + guessGeneration, guessWeight + "kg");
+    compareGuessToAnswer()
+}
+
+function compareGuessToAnswer(){
+    
+}
+
+/* Game Initialisation
+* New Game Button
+* Randomly Choose a Pokemon a Pokemon
+*/
+function newGame(){
+    answerId = Math.floor(Math.random()*906)
+    startGame()
+}
+/*
+ * Loading State (rotating pokeball png)
+ * Once Pokemon is chosen ball stops rotating and prompted with "WHOS THAT POKEMON?!"
+ */
+
+
+/** Hints (drop down animation of bubbles 1 at a time left to right, background colour is green if parameter of pokemon guessed matches 
+ * parameter of pokemon chosen by the system.)
+*/
+
+// GENERATION
+ function checkGeneration(id){
+    if (id <= 151){
+        return 1;
+    }
+    else if (id <= 251){
+        return 2;
+    }
+    else if (id <= 386){
+        return 3;
+    }
+    else if (id <= 493){
+        return 4;
+    }
+    else if (id <= 649){
+        return 5;
+    }
+    else if (id <= 721){ 
+        return 6;
+    }
+    else if (id <= 809){
+        return 7;
+    }
+    else {
+        return 8;
+    }
+ }
+
+// TYPING
+function checkFirstType(pokemonData){
+    return pokemonData.types[0].type.name;
+}
+
+function checkSecondType(pokemonData){
+    if (pokemonData?.types[1]){
+        return pokemonData.types[1].type.name;
+    }
+    else {
+        return "none"
+    }
+}
+
+function checkHasSecondType(secondType){
+    return (secondType != "none")
+}
+
+// WEIGHT
+function checkWeight(pokemonData){
+    return pokemonData.weight/10;
+}
+
+
+/*
+ * Create array listing every legendary pokemon and then loop through that array and compare each element to the randomly selected pokemon by the system 
+ * if the pokemon exists within the array return true and provide that as a hint.
+*/
 function checkBaseStage(a){
     for (let i = 0; i < baseStage.length; i++){
         if (a == baseStage[i]){
@@ -164,6 +276,7 @@ function checkBaseStage(a){
     }
     return false;
 }
+
 function checkFirstStage(a){
     for (let i = 0; i < firstStage.length; i++){
         if (a == firstStage[i]){
@@ -190,80 +303,7 @@ function checkLegendaryOrMythical(a){
     return false
 }
 
-/* Game Initialisation
-* New Game Button
-* Randomly Choose a Pokemon a Pokemon
-*/
-function newGame(){
-    pokemonNumber = Math.floor(Math.random()*906)
-    startGame()
-}
 /*
- * Loading State (rotating pokeball png)
- * Once Pokemon is chosen ball stops rotating and prompted with "WHOS THAT POKEMON?!"
- */
-
-
-/** Hints (drop down animation of bubbles 1 at a time left to right, background colour is green if parameter of pokemon guessed matches 
- * parameter of pokemon chosen by the system.)
-*/
-
- function checkGeneration(id){
-    if (id <= 151){
-        generation = 1;
-    }
-    else if (id <= 251){
-        generation = 2;
-    }
-    else if (id <= 386){
-        generation = 3;
-    }
-    else if (id <= 493){
-        generation = 4;
-    }
-    else if (id <= 649){
-        generation = 5;
-    }
-    else if (id <= 721){ 
-        geneartion = 6;
-    }
-    else if (id <= 809){
-        generation = 7;
-    }
-    else {
-        generation = 8;
-    }
- }
-
-/*
- * 
- * Typing
- * 
-*/
-function checkTyping(pokemonData){
-    if (pokemonData?.types[1]){
-        hasSecondType = true;
-        secondType = pokemonData.types[1].type.name;
-    }
-    else {
-        hasSecondType = false;
-        secondType = "none"
-    }
-}
-
-/* 
- * 
- * weight higher or lower
- * 
- **/ 
- 
-function checkWeight(pokemonData){
-    weight = pokemonData.weight/10;
-}
-
-/*
- * Create array listing every legendary pokemon and then loop through that array and compare each element to the randomly selected pokemon by the system 
- * if the pokemon exists within the array return true and provide that as a hint
  * Hint is yes/no eg. if player guesses non-legendary but pokemon is a legendary then bubble will have text no (indicating the guess isnt a legendary) with a
  * white background (indicating the answer is a legendary.).
  * 
@@ -292,4 +332,3 @@ function checkWeight(pokemonData){
  * Volume Adjustment Slider
  */
 
-startGame()

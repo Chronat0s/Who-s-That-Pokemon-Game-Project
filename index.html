@@ -8,13 +8,16 @@
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
+    <h1 class="title">WHO'S THAT POKEMON?!</h1>
     <div class="pokemon_el">
         
     </div>
     <button onclick="newGame()">
         New Game
     </button>
-    <input type="text" onchange="guessPokemon(event)">
+    <div class="guess_el">
+        <input type="text" onchange="guess(event)">
+    </div>
     <script src = "index.js"></script>
 </body>
 </html>
