@@ -165,7 +165,7 @@ const legendaryOrMythical = [
 
 // Randomly selects a Pokemon from the API as your Answer
 async function startGame(){
-    let answer = await fetch(`http://pokeapi.co/api/v2/pokemon/${answerId}/`);
+    let answer = await fetch(`https://pokeapi.co/api/v2/pokemon/${answerId}/`);
     let answerData = await answer.json();
     answerName = answerData.species.name
     isAnswerBaseStage = checkBaseStage(answerName);
@@ -210,7 +210,7 @@ function checkGuessStage(pokemon){
 async function guess(event){
     guessCount++
     console.log("Guess Count = " + guessCount)
-    let guess = await fetch(`http://pokeapi.co/api/v2/pokemon/${(event.target.value).toLowerCase()}/`);
+    let guess = await fetch(`https://pokeapi.co/api/v2/pokemon/${(event.target.value).toLowerCase()}/`);
     let guessData = await guess.json();
     guessId = guessData.id;
     guessName = guessData.species.name;
