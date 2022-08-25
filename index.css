@@ -79,21 +79,34 @@ input{
     justify-content: center;
     
 }
+
 .hint__heading{
     color: white;
 }
-.hint__response{
+
+.hint__response, .correct, .incorrect{
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
-    font-size: 16px;
+    font-size: 20px;
     font-weight: bold;
+}
+
+.hint__response{
+    background-color: white;
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background-color: white;
     margin: 0 auto;
+}
+
+.correct{
+    background-color: greenyellow;
+}
+
+.incorrect{
+    background-color: red;
 }
 
 li{
