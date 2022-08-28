@@ -210,12 +210,16 @@ async function guess(event){
         <p id = "message_el">You have ${8 - guessCount} Guesses left!</p>`
     }
     else{
+        answerNameSlice = answerName.slice(1)
+        answerNameFirstLetter = answerName[0].toUpperCase();
+        answerName = answerNameFirstLetter + answerNameSlice
         winStreak = 0;
         pokemonEl.innerHTML = `
         <div id = "pokemon_background" class = "pokemon__image--wrapper">
         <img  class = "pokemon__image" src="${guessData.sprites.front_default}" alt="">
         </div>
-        <p id = "message_el">You lose, try again!</p>`
+        <p id = "message_el">Out of guesses, Pokemon was ${answerName}. Try again!</p>`
+        
     }
     generationEl.innerHTML = guessGeneration;
     stageEl.innerHTML = guessStage;
@@ -458,6 +462,7 @@ function compareGuessToAnswer(){
             pokemonBackgroundEl.className += " " + "incorrect";
     }
 }
+
 
 
 /** End of Game 
