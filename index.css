@@ -65,6 +65,17 @@ input{
     width: 100%;
 }
 
+
+.win_streak{
+    background-color: yellow;
+    padding: 0 8px;
+    border-radius: 8px;
+    max-width: 200px;
+    width: 90%;
+    margin: 24px auto;
+
+}
+
 .hints{
     display: flex;
     justify-content: space-around;

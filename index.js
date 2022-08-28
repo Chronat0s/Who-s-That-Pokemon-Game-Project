@@ -1,5 +1,7 @@
 // Variables
+let winStreak = 0;
 let guessCount = 0;
+let winStreakEl = document.querySelector(".win_streak")
 let pokemonEl = document.querySelector(".pokemon_el");
 let guessEl = document.querySelector(".guess_el");
 pokemonEl.innerHTML = `<div class = "pokemon__image--wrapper">
@@ -165,6 +167,7 @@ const legendaryOrMythical = [
 
 // Randomly selects a Pokemon from the API as your Answer
 async function startGame(){
+    winStreakEl.innerHTML = `Win Streak: ${winStreak}`
     let answer = await fetch(`https://pokeapi.co/api/v2/pokemon/${answerId}/`);
     let answerData = await answer.json();
     answerName = answerData.species.name
@@ -185,7 +188,6 @@ async function startGame(){
 // Records your Guess
 async function guess(event){
     guessCount++
-    console.log("Guess Count = " + guessCount)
     let guess = await fetch(`https://pokeapi.co/api/v2/pokemon/${(event.target.value).toLowerCase()}/`);
     let guessData = await guess.json();
     guessId = guessData.id;
@@ -200,11 +202,21 @@ async function guess(event){
     guessHasSecondType = checkHasSecondType(guessSecondType);
     guessWeight = checkWeight(guessData);
     guessStage = checkGuessStage();
-    pokemonEl.innerHTML = `
-    <div id = "pokemon_background" class = "pokemon__image--wrapper">
-    <img  class = "pokemon__image" src="${guessData.sprites.front_default}" alt="">
-    </div>
-    <p id = "message_el">Guess!!!</p>`
+    if (guessCount != 8 ){
+        pokemonEl.innerHTML = `
+        <div id = "pokemon_background" class = "pokemon__image--wrapper">
+        <img  class = "pokemon__image" src="${guessData.sprites.front_default}" alt="">
+        </div>
+        <p id = "message_el">You have ${8 - guessCount} Guesses left!</p>`
+    }
+    else{
+        winStreak = 0;
+        pokemonEl.innerHTML = `
+        <div id = "pokemon_background" class = "pokemon__image--wrapper">
+        <img  class = "pokemon__image" src="${guessData.sprites.front_default}" alt="">
+        </div>
+        <p id = "message_el">You lose, try again!</p>`
+    }
     generationEl.innerHTML = guessGeneration;
     stageEl.innerHTML = guessStage;
     dualTypeEl.innerHTML = guessHasSecondType;
@@ -217,11 +229,12 @@ async function guess(event){
 
 //Game Initialisation
 function newGame(){
+    guessCount = 0;
     answerId = Math.floor(Math.random()*906)
     pokemonEl.innerHTML = `<div class = "pokemon__image--wrapper">
     <img  class = "question-mark__image" src="https://upload.wikimedia.org/wikipedia/commons/5/55/Question_Mark.svg" alt="">
     </div>
-    <p id = "message_el">GUESS!!!</p>`
+    <p id = "message_el">You have 8 Guesses Left!</p>`
     startGame()
 }
 
@@ -438,23 +451,14 @@ function compareGuessToAnswer(){
         if (guessName == answerName){
             pokemonBackgroundEl.className += " " + "correct";
             messageEl.innerHTML = "CORRECT!!!"
+            guessCount = 0;
+            winStreak++
         }
         else{
             pokemonBackgroundEl.className += " " + "incorrect";
     }
 }
 
-
-/** Counters
- * # of GuessesCounter
- *          Cap on # of Guesses before game lost.
- */
-
-/*
- * WinStreakCounter
- *      Game win => +1 to counter
- *      Game loss => set counter back to 0.
- */
 
 /** End of Game 
  *  Blacked out Music if game Lost
