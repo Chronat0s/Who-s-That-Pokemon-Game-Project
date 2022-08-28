@@ -52,7 +52,7 @@ const baseStage = [
     "diglett", "meowth", "psyduck", "mankey", "growlithe", "poliwag", "abra", "machop", "bellsprout", "tentacool",
     "geodude", "ponyta", "slowpoke", "magnemite", "farfetch'd", "doduo", "seel", "grimer", "shellder", "gastly",
     "onix", "drowzee", "krabby", "voltorb", "exeggcute", "cubone", "tyrogue", "lickitung", "koffing", "rhyhorn",
-    "happiny", "tangela", "kangaskhan", "horsea", "goldeen", "staryu", "mime jr.", "scyther", "smoochum", "elekid",
+    "happiny", "tangela", "kangaskhan", "horsea", "goldeen", "staryu", "mime-jr.", "scyther", "smoochum", "elekid",
     "magby", "pinsir", "tauros", "magikarp", "lapras", "ditto", "eevee", "porygon", "omanyte", "kabuto", 
     "aerodactyl", "munchlax", "articuno", "zapdos", "moltres", "dratini", "mewtwo", "mew", "chikorita", "cyndaquil",
     "totodile", "sentret", "hoothoot", "ledyba", "spinarak", "chinchou", "togepi", "natu", "mareep", "azurill", 
@@ -102,7 +102,7 @@ const firstStage = [
     "dugtrio", "persian", "perrserker", "golduck", "primeape", "arcanine", "poliwhirl", "kadabra", "machoke", "weepinbell",
     "tentacruel", "graveler", "rapidash", "slowbro", "slowking", "magneton", "sirfetch'd", "dodrio", "dewgong", "muk",
     "cloyster", "haunter", "steelix", "hypno", "kingler", "electrode", "exeggutor", "marowak", "hitmonlee", "hitmonchan",
-    "hitmontop", "lickilicky", "weezing", "rhydon", "chansey", "tangrowth", "seadra", "seaking", "starmie", "mr. mime",
+    "hitmontop", "lickilicky", "weezing", "rhydon", "chansey", "tangrowth", "seadra", "seaking", "starmie", "mr-mime",
     "scizor", "kleavor", "jynx", "electabuzz", "magmar", "gyarados", "vaporeon", "jolteon", "flareon", "espeon",
     "umbreon", "leafeon", "glaceon", "sylveon", "porygon2", "omastar", "kabutops", "snorlax", "dragonair", "bayleef",
     "quilava", "croconaw", "furret", "noctowl", "ledian", "ariados", "lanturn", "togetic", "xatu", "flaaffy",
@@ -135,7 +135,7 @@ const firstStage = [
 const secondStage = [
     "venusaur", "charizard", "blastoise", "butterfree", "beedrill", "pidgeot", "raichu", "nidoqueen", "nidoking", "clefable",
     "wigglytuff", "crobat", "vileplume", "bellossom", "poliwrath", "politoed", "alakazam", "machamp", "victreebel", "golem",
-    "magnezone", "gengar", "rhyperior", "blissey", "kingdra", "mr. rime", "electivire", "magmortar", "porygon-z", "dragonite",
+    "magnezone", "gengar", "rhyperior", "blissey", "kingdra", "mr-rime", "electivire", "magmortar", "porygon-z", "dragonite",
     "meganium", "typhlosion", "feraligatr", "togekiss", "ampharos", "azumarill", "jumpluff", "ursaluna", "mamoswine", "tyranitar",
     "sceptile", "blaziken", "swampert", "obstagoon", "beautifly", "dustox", "ludicolo", "shiftry", "gardevoir", "gallade",
     "slaking", "exploud", "aggron", "roserade", "flygon", "dusknoir", "walrein", "salamence", "metagross", "torterra",
@@ -182,30 +182,6 @@ async function startGame(){
     console.log(answerName, isAnswerBaseStage, isAnswerFirstStage, isAnswerSecondStage, isAnswerLegendaryOrMythical, answerFirstType, answerSecondType, "Gen: " + answerGeneration, answerWeight + "kg");
 }
 
-function checkAnswerStage(pokemon){
-    if (isAnswerBaseStage){
-        return "Base"
-    }
-    else if (isAnswerFirstStage){
-        return "First"
-    }
-    else {
-        return "Second"
-    }
-}
-
-function checkGuessStage(pokemon){
-    if (isGuessBaseStage){
-        return "Base"
-    }
-    else if (isGuessFirstStage){
-        return "First"
-    }
-    else{
-        return "Second"
-    }
-}
-
 // Records your Guess
 async function guess(event){
     guessCount++
@@ -239,12 +215,7 @@ async function guess(event){
     compareGuessToAnswer();
 }
 
-// Compare Pokemon
-
-/* Game Initialisation
-* New Game Button
-* Randomly Choose a Pokemon a Pokemon
-*/
+//Game Initialisation
 function newGame(){
     answerId = Math.floor(Math.random()*906)
     pokemonEl.innerHTML = `<div class = "pokemon__image--wrapper">
@@ -253,14 +224,13 @@ function newGame(){
     <p id = "message_el">GUESS!!!</p>`
     startGame()
 }
+
 /*
- * Loading State (rotating pokeball png)
- * Once Pokemon is chosen ball stops rotating and prompted with "WHOS THAT POKEMON?!"
- */
-
-
-/** Hints (drop down animation of bubbles 1 at a time left to right, background colour is green if parameter of pokemon guessed matches 
- * parameter of pokemon chosen by the system.)
+*
+*
+/** Hint Animation
+ * 
+ * 
 */
 
 // GENERATION
@@ -320,10 +290,7 @@ function checkWeight(pokemonData){
 }
 
 
-/*
- * Create array listing every legendary pokemon and then loop through that array and compare each element to the randomly selected pokemon by the system 
- * if the pokemon exists within the array return true and provide that as a hint.
-*/
+// Compare Pokemon to Arrays to determine Stage
 function checkBaseStage(a){
     for (let i = 0; i < baseStage.length; i++){
         if (a == baseStage[i]){
@@ -341,6 +308,7 @@ function checkFirstStage(a){
     }
     return false
 }
+
 function checkSecondStage(a){
     for (let i = 0; i < secondStage.length; i++){
         if (a == secondStage[i]){
@@ -349,6 +317,7 @@ function checkSecondStage(a){
     }
     return false
 }
+
 function checkLegendaryOrMythical(a){
     for (let i = 0; i < legendaryOrMythical.length; i++){
         if (a == legendaryOrMythical[i]){
@@ -359,6 +328,30 @@ function checkLegendaryOrMythical(a){
     return "No"
 }
 
+// Store Stage in Variable
+function checkAnswerStage(pokemon){
+    if (isAnswerBaseStage){
+        return "Base"
+    }
+    else if (isAnswerFirstStage){
+        return "First"
+    }
+    else {
+        return "Second"
+    }
+}
+
+function checkGuessStage(pokemon){
+    if (isGuessBaseStage){
+        return "Base"
+    }
+    else if (isGuessFirstStage){
+        return "First"
+    }
+    else{
+        return "Second"
+    }
+}
 
 // Compare Guess to Answer
 function compareGuessToAnswer(){
