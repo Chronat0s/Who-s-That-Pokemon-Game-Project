@@ -20,7 +20,11 @@
     </button>
     <h1 class="win_streak">Win Streak: </h1>
         <div class="guess_el">
-            <input type="text" placeholder = "Enter a Pokemon" onchange="guess(event)">
+            <div class="container">
+                <input type="text" id = "pokemon_input" class="autocomplete__input" placeholder = "Enter a Pokemon" onchange="guess(event)">
+                <ul id = "pokemon_list" class="autocomplete__list">
+                </ul>
+            </div>
             <ul class = "hints">
                 <li class="hint_wrapper">
                     <h2 class="hint__heading">Gen</h2>

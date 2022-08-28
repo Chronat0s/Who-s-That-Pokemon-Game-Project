@@ -34,7 +34,6 @@ button{
 input{
     height: 40px;
     width: 200px;
-    border-radius: 20px;
     font-size: 24px;
     font-weight: bold;
     text-align: center;
@@ -63,6 +62,33 @@ input{
 
 .question-mark__image{
     width: 100%;
+}
+
+.container{
+    max-width: 208px;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+}
+
+.autocomplete__list{
+    position: relative;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background-color: white;
+    width: 100%;
+    max-height: 100px;
+    overflow-y: auto;
+}
+
+.autocomplete__list li{
+    padding: 16px;
+    width: calc(100% - 40px);
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
 }
 
 

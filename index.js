@@ -4,9 +4,55 @@ let guessCount = 0;
 let winStreakEl = document.querySelector(".win_streak")
 let pokemonEl = document.querySelector(".pokemon_el");
 let guessEl = document.querySelector(".guess_el");
+let pokemon = [];
+const pokemonListEl = document.querySelector("#pokemon_list")
+const pokemonInputEl = document.querySelector("#pokemon_input")
+
+
 pokemonEl.innerHTML = `<div class = "pokemon__image--wrapper">
 <img  class = "question-mark__image" src="https://upload.wikimedia.org/wikipedia/commons/5/55/Question_Mark.svg" alt="">
 </div>`
+
+async function getPokemon(){
+    let api = await fetch("https://pokeapi.co/api/v2/pokemon-species/?offset=0&limit=905")
+    let apiData = await api.json();
+    apiDataArray = apiData.results
+    pokemon = apiDataArray.map((x) => x.name)
+    pokemon = pokemon.sort();
+}
+
+
+function loadPokemon(data, element){
+    if (data){
+        element.innerHTML = "";
+        let innerElement = "";
+        data.forEach((item) => {
+            innerElement += `
+            <li onclick = "choosePokemon(event)">${item.charAt(0).toUpperCase() + item.slice(1)}</li>`
+        })
+    element.innerHTML = innerElement;
+    }
+}
+
+function filterPokemon(data, searchText){
+    return data.filter((x) => x.toLowerCase().includes(searchText.toLowerCase()))
+}
+
+pokemonInputEl.addEventListener("input", function(){
+    const filteredData = filterPokemon(pokemon, pokemonInputEl.value)
+    loadPokemon(filteredData, pokemonListEl)
+})
+
+function choosePokemon(event){
+    pokemonInputEl.value = event.target.innerHTML
+}
+
+getPokemon();
+
+
+
+
+
 
 // Answer 
 let isAnswerBaseStage = false;
