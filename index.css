@@ -67,10 +67,11 @@ input{
 
 
 .win_streak{
+    font-size: 24px;
     background-color: yellow;
-    padding: 0 8px;
-    border-radius: 8px;
-    max-width: 200px;
+    padding: 8px 16px;
+    border-radius: 12px;
+    max-width: 150px;
     width: 90%;
     margin: 24px auto;
 
