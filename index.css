@@ -31,12 +31,28 @@ button{
     margin-bottom: 40px;
 }
 
+button:hover{
+    background-color: #242424;
+    border: 4px solid yellow;
+    color: yellow;
+    transition: all 300ms ease;
+    cursor: pointer;
+}
+
+button:active{
+    transform: translateY(2px);
+}
+
 input{
     height: 40px;
     width: 200px;
     font-size: 24px;
     font-weight: bold;
     text-align: center;
+}
+
+.pokemon-autocomplete__list:hover{
+    background-color: lightgrey;
 }
 
 .title{

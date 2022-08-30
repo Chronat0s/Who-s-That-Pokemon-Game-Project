@@ -7,53 +7,9 @@ let guessEl = document.querySelector(".guess_el");
 let pokemon = [];
 const pokemonListEl = document.querySelector("#pokemon_list")
 const pokemonInputEl = document.querySelector("#pokemon_input")
-
-
 pokemonEl.innerHTML = `<div class = "pokemon__image--wrapper">
 <img  class = "question-mark__image" src="https://upload.wikimedia.org/wikipedia/commons/5/55/Question_Mark.svg" alt="">
 </div>`
-
-async function getPokemon(){
-    let api = await fetch("https://pokeapi.co/api/v2/pokemon-species/?offset=0&limit=905")
-    let apiData = await api.json();
-    apiDataArray = apiData.results
-    pokemon = apiDataArray.map((x) => x.name)
-    pokemon = pokemon.sort();
-}
-
-
-function loadPokemon(data, element){
-    if (data){
-        element.innerHTML = "";
-        let innerElement = "";
-        data.forEach((item) => {
-            innerElement += `
-            <li onclick = "choosePokemon(event)">${item.charAt(0).toUpperCase() + item.slice(1)}</li>`
-        })
-    element.innerHTML = innerElement;
-    }
-}
-
-function filterPokemon(data, searchText){
-    return data.filter((x) => x.toLowerCase().includes(searchText.toLowerCase()))
-}
-
-pokemonInputEl.addEventListener("input", function(){
-    const filteredData = filterPokemon(pokemon, pokemonInputEl.value)
-    loadPokemon(filteredData, pokemonListEl)
-})
-
-function choosePokemon(event){
-    pokemonInputEl.value = event.target.innerHTML;
-    guess(event.target.innerHTML);
-}
-
-getPokemon();
-
-
-
-
-
 
 // Answer 
 let isAnswerBaseStage = false;
@@ -228,8 +184,6 @@ async function startGame(){
     answerHasSecondType = checkHasSecondType(answerSecondType);
     answerWeight = checkWeight(answerData)
     answerStage = checkAnswerStage()
-    console.log("answer");
-    console.log(answerName, isAnswerBaseStage, isAnswerFirstStage, isAnswerSecondStage, isAnswerLegendaryOrMythical, answerFirstType, answerSecondType, "Gen: " + answerGeneration, answerWeight + "kg");
 }
 
 // Records your Guess
@@ -510,19 +464,42 @@ function compareGuessToAnswer(){
     }
 }
 
+// POKEMON LIST AUTOCOMPLETE DROPDOWN SUGGESTIONS
+async function getPokemon(){
+    let api = await fetch("https://pokeapi.co/api/v2/pokemon-species/?offset=0&limit=905")
+    let apiData = await api.json();
+    apiDataArray = apiData.results
+    pokemon = apiDataArray.map((x) => x.name)
+    pokemon = pokemon.sort();
+}
+
+function loadPokemon(data, element){
+    if (data){
+        element.innerHTML = "";
+        let innerElement = "";
+        data.forEach((item) => {
+            innerElement += `
+            <li id = "pokemon-autocomplete__list--item" class = "pokemon-autocomplete__list" onclick = "choosePokemon(event)">${item.charAt(0).toUpperCase() + item.slice(1)}</li>`
+        })
+    element.innerHTML = innerElement;
+    }
+}
+
+function filterPokemon(data, searchText){
+    return data.filter((x) => x.toLowerCase().includes(searchText.toLowerCase()))
+}
+
+pokemonInputEl.addEventListener("input", function(){
+    const filteredData = filterPokemon(pokemon, pokemonInputEl.value)
+    loadPokemon(filteredData, pokemonListEl)
+})
+
+function choosePokemon(event){
+    pokemonInputEl.value = event.target.innerHTML;
+    guess(event.target.innerHTML);  
+}
+
+getPokemon();
 
 
-/** End of Game 
- *  Blacked out Music if game Lost
- *      pop up saying you blacked out (has close button)
- *  Battle Won music of game won
- *      confetti animation
- *  Open Pokeball and display Pokemon Sprite.
- *  Add Pokemon Cries if possible through api
- */
-
-/** Pokemon Background Music
- * Mute Button
- * Volume Adjustment Slider
- */
 
