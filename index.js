@@ -44,7 +44,8 @@ pokemonInputEl.addEventListener("input", function(){
 })
 
 function choosePokemon(event){
-    pokemonInputEl.value = event.target.innerHTML
+    pokemonInputEl.value = event.target.innerHTML;
+    guess(event.target.innerHTML);
 }
 
 getPokemon();
@@ -234,7 +235,7 @@ async function startGame(){
 // Records your Guess
 async function guess(event){
     guessCount++
-    let guess = await fetch(`https://pokeapi.co/api/v2/pokemon/${(event.target.value).toLowerCase()}/`);
+    let guess = await fetch(`https://pokeapi.co/api/v2/pokemon/${(event).toLowerCase()}/`);
     let guessData = await guess.json();
     guessId = guessData.id;
     guessName = guessData.species.name;
