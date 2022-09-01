@@ -1,9 +1,3 @@
-// CORS COMPATIBILITY
-
-app.get(cors({
-    origin: '*'
-}));
-
 
 // Variables
 let winStreak = 0;
