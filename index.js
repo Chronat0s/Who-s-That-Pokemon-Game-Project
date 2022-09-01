@@ -1,3 +1,10 @@
+// CORS COMPATIBILITY
+
+app.get(cors({
+    origin: '*';
+}))
+
+
 // Variables
 let winStreak = 0;
 let guessCount = 0;
