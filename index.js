@@ -1,8 +1,8 @@
 // CORS COMPATIBILITY
 
 app.get(cors({
-    origin: '*';
-}))
+    origin: '*'
+}));
 
 
 // Variables
