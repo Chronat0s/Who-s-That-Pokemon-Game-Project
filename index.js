@@ -412,20 +412,28 @@ function compareGuessToAnswer(){
     // Compare Type 1 of Guess and Answer
     if (guessFirstType == answerFirstType){
         type1El.className += " " + "correct";
-        type1El.classList.remove("incorrect");
+        type1El.classList.remove("incorrect", "semi-correct");
     }
-    else {
+    else if (guessFirstType == answerSecondType){
+        type1El.className += " " + "semi-correct";
+        type1El.classList.remove("correct", "incorrect");
+    }
+    else{
         type1El.className += " " + "incorrect";
-        type1El.classList.remove("correct");
+        type1El.classList.remove("correct", "semi-correct");
     }
     // Compare Type 2 of Guess and Answer
     if (guessSecondType == answerSecondType){
         type2El.className += " " + "correct";
-        type2El.classList.remove("incorrect");
+        type2El.classList.remove("incorrect", "semi-correct");
+    }
+    else if (guessSecondType == answerFirstType){
+        type2El.className += " " + "semi-correct";
+        type2El.classList.remove("correct", "incorrect");
     }
     else{
         type2El.className += " " + "incorrect";
-        type2El.classList.remove("correct");
+        type2El.classList.remove("correct", "semi-correct");
     }
     // Compare isLegendaryOrMythical Boolean of Guess and Answer
     if (isGuessLegendaryOrMythical == isAnswerLegendaryOrMythical){
