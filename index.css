@@ -141,7 +141,7 @@ input{
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: calc(100%/7)
+    width: calc(100%/7);
 }
 
 .hint__heading{
@@ -197,4 +197,14 @@ li{
     .hint_wrapper{
         width: 100%;
     }
+
+    .title{
+        font-size: 24px;
+    }
+
+    .pokeball{
+        width: 24px;
+    }
 }
+
+
