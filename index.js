@@ -203,7 +203,7 @@ async function guess(event){
     guessHasSecondType = checkHasSecondType(guessSecondType);
     guessWeight = checkWeight(guessData);
     guessStage = checkGuessStage();
-    if (guessCount != 8 ){
+    if ( 8 - guessCount > 0){
         pokemonEl.innerHTML = `
         <div id = "pokemon_background" class = "pokemon__image--wrapper">
         <img  class = "pokemon__image" src="${guessData.sprites.front_default}" alt="">
