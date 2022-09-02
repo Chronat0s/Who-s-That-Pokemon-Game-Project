@@ -3,8 +3,18 @@ let winStreak = 0;
 let guessCount = 0;
 let winStreakEl = document.querySelector(".win_streak")
 let pokemonEl = document.querySelector(".pokemon_el");
-let guessEl = document.querySelector(".guess_el");
-let pokemon = [];
+let hintsEl = document.querySelector(".hints");
+
+async function getPokedex(){
+    let api = await fetch("https://pokeapi.co/api/v2/pokemon-species/?offset=0&limit=905")
+    let apiData = await api.json();
+    apiDataArray = apiData.results
+    pokedex = apiDataArray.map((x) => x.name)
+    return pokedex
+}
+getPokedex()
+let pokedex = [];
+let guesses = [];
 const pokemonListEl = document.querySelector("#pokemon_list")
 const pokemonInputEl = document.querySelector("#pokemon_input")
 pokemonEl.innerHTML = `<div class = "pokemon__image--wrapper">
@@ -184,62 +194,231 @@ async function startGame(){
     answerHasSecondType = checkHasSecondType(answerSecondType);
     answerWeight = checkWeight(answerData)
     answerStage = checkAnswerStage()
-    console.log(answerName)
 }
 
 // Records your Guess
 async function guess(event){
-    guessCount++
-    let guess = await fetch(`https://pokeapi.co/api/v2/pokemon/${(event).toLowerCase()}/`);
-    let guessData = await guess.json();
-    guessId = guessData.id;
-    guessName = guessData.species.name;
-    isGuessBaseStage = checkBaseStage(guessName);
-    isGuessFirstStage = checkFirstStage(guessName);
-    isGuessSecondStage = checkSecondStage(guessName);
-    isGuessLegendaryOrMythical = checkLegendaryOrMythical(guessName);
-    guessFirstType = checkFirstType(guessData);
-    guessSecondType = checkSecondType(guessData);
-    guessGeneration = checkGeneration(guessId);
-    guessHasSecondType = checkHasSecondType(guessSecondType);
-    guessWeight = checkWeight(guessData);
-    guessStage = checkGuessStage();
-        if (8 - guessCount > 0 || guessName == answerName){
-            pokemonEl.innerHTML = `
-            <div id = "pokemon_background" class = "pokemon__image--wrapper">
-            <img  class = "pokemon__image" src="${guessData.sprites.front_default}" alt="">
-            </div>
-            <p id = "message_el">You have ${8 - guessCount} Guesses left!</p>`
-        }
-        else{  
-                answerNameSlice = answerName.slice(1)
-                answerNameFirstLetter = answerName[0].toUpperCase();
-                answerName = answerNameFirstLetter + answerNameSlice
-                winStreak = 0;
+    let messageEl = document.getElementById("message_el");
+
+    if(messageEl.innerHTML != "CORRECT!!!"  && guessCount != 8){
+        let id = pokedex.indexOf(event.toLowerCase()) + 1
+        guessCount++
+        let guess = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}/`);
+        let guessData = await guess.json();
+        guessId = guessData.id;
+        guessName = guessData.species.name;
+        isGuessBaseStage = checkBaseStage(guessName);
+        isGuessFirstStage = checkFirstStage(guessName);
+        isGuessSecondStage = checkSecondStage(guessName);
+        isGuessLegendaryOrMythical = checkLegendaryOrMythical(guessName);
+        guessFirstType = checkFirstType(guessData);
+        guessSecondType = checkSecondType(guessData);
+        guessGeneration = checkGeneration(guessId);
+        guessHasSecondType = checkHasSecondType(guessSecondType);
+        guessWeight = checkWeight(guessData);
+        guessStage = checkGuessStage();
+            if (8 - guessCount > 0 || guessName == answerName){
                 pokemonEl.innerHTML = `
                 <div id = "pokemon_background" class = "pokemon__image--wrapper">
                 <img  class = "pokemon__image" src="${guessData.sprites.front_default}" alt="">
                 </div>
-                <p id = "message_el">Out of guesses, Pokemon was ${answerName}. Try again!</p>`
+                <p id = "message_el">You have ${8 - guessCount} Guesses left!</p>`
+            }
+            else{  
+                    answerNameSlice = answerName.slice(1)
+                    answerNameFirstLetter = answerName[0].toUpperCase();
+                    answerName = answerNameFirstLetter + answerNameSlice
+                    winStreak = 0;
+                    pokemonEl.innerHTML = `
+                    <div id = "pokemon_background" class = "pokemon__image--wrapper">
+                    <img  class = "pokemon__image" src="${guessData.sprites.front_default}" alt="">
+                    </div>
+                    <p id = "message_el">Out of guesses, Pokemon was ${answerName}. Try again!</p>`
+            }
+    
+        let newGuess = {
+            index: guessCount - 1,
+            name: guessName,
+            generation: guessGeneration,
+            stage: guessStage,
+            dualType: guessHasSecondType,
+            firstType: guessFirstType,
+            secondType: guessSecondType,
+            legendary: isGuessLegendaryOrMythical,
+            weight: guessWeight
         }
-    generationEl.innerHTML = guessGeneration;
-    stageEl.innerHTML = guessStage;
-    dualTypeEl.innerHTML = guessHasSecondType;
-    type1El.innerHTML = guessFirstType;
-    type2El.innerHTML = guessSecondType;
-    legendaryEl.innerHTML = isGuessLegendaryOrMythical;
-    weightEl.innerHTML = guessWeight + "kg";
-    compareGuessToAnswer();
+        guesses.push(newGuess)
+        hintsEl.innerHTML = `
+        <div class="hint_headings">
+            <h2 class="hint__heading">Gen</h2>
+            <h2 class = "hint__heading">Stage</h2>
+            <h2 class = "hint__heading">Dual Type</h2>
+            <h2 class = "hint__heading">Type 1</h2>
+            <h2 class = "hint__heading">Type 2</h2>
+            <h2 class = "hint__heading">Legendary</h2>
+            <h2 class = "hint__heading">Weight</h2>
+        </div>
+        `
+    
+        guesses.forEach(function(guess){
+            hintsEl.innerHTML += `
+                <div class="guess">
+                    <li class="hint_wrapper">
+                        <div id="generation_el${guess.index}" class="hint__response">${guess.generation}</div>
+                    </li>
+                    <li class = "hint_wrapper">
+                        <div id = "stage_el${guess.index}" class = "hint__response">${guess.stage}</div>
+                    </li>
+                    <li class="hint_wrapper">
+                        <div id = "dual-type_el${guess.index}" class = "hint__response">${guess.dualType}</div>
+                    </li>
+                    <li class="hint_wrapper">
+                        <div  id = "type1_el${guess.index}" class = "hint__response">${guess.firstType}</div>
+                    </li>
+                    <li class = "hint_wrapper">
+                        <div id = "type2_el${guess.index}" class = "hint__response">${guess.secondType}</div>
+                    </li>
+                    <li class = "hint_wrapper">
+                        <div id = "legendary_el${guess.index}" class = "hint__response">${guess.legendary}</div>
+                    </li>
+                    <li class = "hint_wrapper">
+                        <div id = "weight_el${guess.index}" class = "hint__response">${guess.weight}kg</div>
+                    </li>
+                </div>
+            `
+        })
+    
+        guesses.forEach(function(guess){
+        let generationEl = document.getElementById(`generation_el${guess.index}`);
+        let stageEl = document.getElementById(`stage_el${guess.index}`);
+        let dualTypeEl = document.getElementById(`dual-type_el${guess.index}`);
+        let type1El = document.getElementById(`type1_el${guess.index}`);
+        let type2El = document.getElementById(`type2_el${guess.index}`);
+        let legendaryEl = document.getElementById(`legendary_el${guess.index}`);
+        let weightEl = document.getElementById(`weight_el${guess.index}`);
+    
+        if(guess.generation == answerGeneration){
+            generationEl.className += " " + "correct"
+            generationEl.classList.remove("incorrect");
+            
+        }
+        else if(guess.generation > answerGeneration){
+            generationEl.innerHTML += "&#8595;";
+            generationEl.className += " " + "incorrect";
+            generationEl.classList.remove("correct");
+        }
+        else {
+            generationEl.innerHTML += "&#8593;";
+            generationEl.className += " " + "incorrect";
+            generationEl.classList.remove("correct");
+        }
+        // Compare Stage of Guess and Answer
+        if (guess.stage == answerStage){
+            stageEl.className += " " + "correct";
+            stageEl.classList.remove("incorrect")
+        }
+        else{
+            stageEl.className += " " + "incorrect";
+            stageEl.classList.remove("correct")
+    
+        }
+        // Compare Dual-Type Boolean of Guess and Answer
+        if (guess.dualType == answerHasSecondType){
+            dualTypeEl.className += " " + "correct";
+            dualTypeEl.classList.remove("incorrect");
+        }
+        else {
+            dualTypeEl.className += " " + "incorrect";
+            dualTypeEl.classList.remove("correct");
+    
+        }
+        // Compare Type 1 of Guess and Answer
+        if (guess.firstType == answerFirstType){
+            type1El.className += " " + "correct";
+            type1El.classList.remove("incorrect", "semi-correct");
+        }
+        else if (guess.firstType == answerSecondType){
+            type1El.className += " " + "semi-correct";
+            type1El.classList.remove("correct", "incorrect");
+        }
+        else{
+            type1El.className += " " + "incorrect";
+            type1El.classList.remove("correct", "semi-correct");
+        }
+        // Compare Type 2 of Guess and Answer
+        if (guess.secondType == answerSecondType){
+            type2El.className += " " + "correct";
+            type2El.classList.remove("incorrect", "semi-correct");
+        }
+        else if (guess.secondType == answerFirstType){
+            type2El.className += " " + "semi-correct";
+            type2El.classList.remove("correct", "incorrect");
+        }
+        else{
+            type2El.className += " " + "incorrect";
+            type2El.classList.remove("correct", "semi-correct");
+        }
+        // Compare isLegendaryOrMythical Boolean of Guess and Answer
+        if (guess.legendary == isAnswerLegendaryOrMythical){
+            legendaryEl.className += " " + "correct";
+            legendaryEl.classList.remove("incorrect");
+        }
+        else{
+            legendaryEl.className += " " + "incorrect";
+            legendaryEl.classList.remove("correct");
+        }
+        // Compare Weight of Guess and Answer
+        if (guess.weight == answerWeight){
+            weightEl.className += " " + "correct";
+            weightEl.classList.remove("incorrect");
+        }
+        else if (guessWeight > answerWeight){
+            weightEl.innerHTML += "&#8595;";
+            weightEl.className += " " + "incorrect";
+            weightEl.classList.remove("correct");
+        }
+        else{
+            weightEl.innerHTML += "&#8593;";
+            weightEl.className += " " + "incorrect";
+            weightEl.classList.remove("correct");
+        }
+        let pokemonBackgroundEl = document.getElementById("pokemon_background");
+        let messageEl = document.getElementById("message_el");
+            if (guess.name == answerName){
+                pokemonBackgroundEl.className += " " + "correct";
+                pokemonBackgroundEl.classList.remove("incorrect");
+                messageEl.innerHTML = "CORRECT!!!"
+                guessCount = 0;
+                winStreak++
+            }
+            else{
+                pokemonBackgroundEl.className += " " + "incorrect";
+        }
+    
+        })
+    }
 }
 
 //Game Initialisation
 function newGame(){
     guessCount = 0;
+    guesses = [];
     answerId = Math.floor(Math.random()*906)
     pokemonEl.innerHTML = `<div class = "pokemon__image--wrapper">
     <img  class = "question-mark__image" src="https://upload.wikimedia.org/wikipedia/commons/5/55/Question_Mark.svg" alt="">
     </div>
     <p id = "message_el">You have 8 Guesses Left!</p>`
+    hintsEl.innerHTML = `
+    <div class="hint_headings">
+        <h2 class="hint__heading">Gen</h2>
+        <h2 class = "hint__heading">Stage</h2>
+        <h2 class = "hint__heading">Dual Type</h2>
+        <h2 class = "hint__heading">Type 1</h2>
+        <h2 class = "hint__heading">Type 2</h2>
+        <h2 class = "hint__heading">Legendary</h2>
+        <h2 class = "hint__heading">Weight</h2>
+    </div>
+    `
     startGame()
 }
 
@@ -368,107 +547,6 @@ function checkGuessStage(pokemon){
     }
     else{
         return "Second"
-    }
-}
-
-// Compare Guess to Answer
-function compareGuessToAnswer(){
-    // Compare Generation of Guess and Answer
-    if(guessGeneration == answerGeneration){
-        generationEl.className += " " + "correct"
-        generationEl.classList.remove("incorrect");
-        
-    }
-    else if(guessGeneration > answerGeneration){
-        generationEl.innerHTML += "&#8595;";
-        generationEl.className += " " + "incorrect";
-        generationEl.classList.remove("correct");
-    }
-    else {
-        generationEl.innerHTML += "&#8593;";
-        generationEl.className += " " + "incorrect";
-        generationEl.classList.remove("correct");
-    }
-    // Compare Stage of Guess and Answer
-    if (guessStage == answerStage){
-        stageEl.className += " " + "correct";
-        stageEl.classList.remove("incorrect")
-    }
-    else{
-        stageEl.className += " " + "incorrect";
-        stageEl.classList.remove("correct")
-
-    }
-    // Compare Dual-Type Boolean of Guess and Answer
-    if (guessHasSecondType == answerHasSecondType){
-        dualTypeEl.className += " " + "correct";
-        dualTypeEl.classList.remove("incorrect");
-    }
-    else {
-        dualTypeEl.className += " " + "incorrect";
-        dualTypeEl.classList.remove("correct");
-
-    }
-    // Compare Type 1 of Guess and Answer
-    if (guessFirstType == answerFirstType){
-        type1El.className += " " + "correct";
-        type1El.classList.remove("incorrect", "semi-correct");
-    }
-    else if (guessFirstType == answerSecondType){
-        type1El.className += " " + "semi-correct";
-        type1El.classList.remove("correct", "incorrect");
-    }
-    else{
-        type1El.className += " " + "incorrect";
-        type1El.classList.remove("correct", "semi-correct");
-    }
-    // Compare Type 2 of Guess and Answer
-    if (guessSecondType == answerSecondType){
-        type2El.className += " " + "correct";
-        type2El.classList.remove("incorrect", "semi-correct");
-    }
-    else if (guessSecondType == answerFirstType){
-        type2El.className += " " + "semi-correct";
-        type2El.classList.remove("correct", "incorrect");
-    }
-    else{
-        type2El.className += " " + "incorrect";
-        type2El.classList.remove("correct", "semi-correct");
-    }
-    // Compare isLegendaryOrMythical Boolean of Guess and Answer
-    if (isGuessLegendaryOrMythical == isAnswerLegendaryOrMythical){
-        legendaryEl.className += " " + "correct";
-        legendaryEl.classList.remove("incorrect");
-    }
-    else{
-        legendaryEl.className += " " + "incorrect";
-        legendaryEl.classList.remove("correct");
-    }
-    // Compare Weight of Guess and Answer
-    if (guessWeight == answerWeight){
-        weightEl.className += " " + "correct";
-        weightEl.classList.remove("incorrect");
-    }
-    else if (guessWeight > answerWeight){
-        weightEl.innerHTML += "&#8595;";
-        weightEl.className += " " + "incorrect";
-        weightEl.classList.remove("correct");
-    }
-    else{
-        weightEl.innerHTML += "&#8593;";
-        weightEl.className += " " + "incorrect";
-        weightEl.classList.remove("correct");
-    }
-    let pokemonBackgroundEl = document.getElementById("pokemon_background");
-        let messageEl = document.getElementById("message_el");
-        if (guessName == answerName){
-            pokemonBackgroundEl.className += " " + "correct";
-            messageEl.innerHTML = "CORRECT!!!"
-            guessCount = 0;
-            winStreak++
-        }
-        else{
-            pokemonBackgroundEl.className += " " + "incorrect";
     }
 }
 

@@ -130,7 +130,7 @@ input{
 
 .hints{
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
     margin: 0 auto;
     width: 100%;
     max-width: 1000px;
@@ -144,8 +144,23 @@ input{
     width: calc(100%/7);
 }
 
+.hint_headings, .guess{
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
+
+.hint_headings{
+    margin-top: 20px;
+}
+.guess{
+    margin-bottom: 20px;
+}
+
 .hint__heading{
     color: white;
+    width: calc(100%/7);
+    font-size: 20px;
 }
 
 .hint__response, .correct, .incorrect, .semi-correct{
@@ -186,15 +201,18 @@ li{
     transform: translateY(4px);
 }
 
-@media (max-width: 1080px){
-    .hint_wrapper{
-        width:25%;
+@media (max-width: 780px){
+
+    .hint__heading{
+        font-size: 20px;
     }
 
-    .hints{
-        display: flex;
-        flex-wrap: wrap;
+    .hint__response{
+        width: 60px;
+        height: 60px;
+        font-size: 16px;
     }
+
 }
 
 @media (max-width: 480px){
@@ -208,6 +226,16 @@ li{
 
     .pokeball{
         width: 24px;
+    }
+
+    .hint__heading{
+        font-size: 12px;
+    }
+
+    .hint__response{
+        width: 40px;
+        height: 40px;
+        font-size: 10px;
     }
 }
 
