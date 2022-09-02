@@ -1,4 +1,3 @@
-
 // Variables
 let winStreak = 0;
 let guessCount = 0;

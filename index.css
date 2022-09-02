@@ -1,3 +1,7 @@
+html{
+    background-color: #242424;
+}
+
 .row{
     display: flex;
     flex-direction: column;
@@ -6,7 +10,6 @@
     max-width: 1400px;
     height: 100vh;
     margin: 0 auto;
-    background-color: #242424;
 }
 
 p{
@@ -119,19 +122,25 @@ input{
 
 }
 
+.guess_el{
+    display: flex;
+    flex-direction: column;
+}
+
 .hints{
     display: flex;
     justify-content: space-around;
     margin: 0 auto;
     width: 100%;
     max-width: 1000px;
+    padding: 0;
 }
 
-.hint__wrapper{
+.hint_wrapper{
     display: flex;
     flex-direction: column;
     justify-content: center;
-    
+    width: calc(100%/7)
 }
 
 .hint__heading{
@@ -170,4 +179,21 @@ li{
 .pokeball{
     width: 30px;
     transform: translateY(4px);
+}
+
+@media (max-width: 1080px){
+    .hint_wrapper{
+        width:25%;
+    }
+
+    .hints{
+        display: flex;
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 480px){
+    .hint_wrapper{
+        width: 100%;
+    }
 }
